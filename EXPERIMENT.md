@@ -1,4 +1,4 @@
-# Nyx hill-climb log (git-checkpointed, revert-on-regression)
+# Operon hill-climb log (git-checkpointed, revert-on-regression)
 
 Score = mean over corpus of per-item [50 neutral + savings_bonus − accuracy_loss_penalty].
 50 = safe text passthrough. >50 = net win. Model: claude-opus-4.8. 2-trial image accuracy.

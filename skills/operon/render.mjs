@@ -2,7 +2,7 @@
 
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { basename, resolve } from 'node:path';
-import { renderTextToPngs, renderTextToPngsWithCharLimit, reflow, DENSE_CONTENT_COLS } from './vendor/nyx-render.bundle.js';
+import { renderTextToPngs, renderTextToPngsWithCharLimit, reflow, DENSE_CONTENT_COLS } from './vendor/operon-render.bundle.js';
 
 const MIN_CHARS = 6000;
 const SPARSE_LINE_THRESHOLD = 60;
@@ -11,7 +11,7 @@ const REFLOW_PAGE_CAP = 28080;
 
 function parseArgs(argv) {
   const files = [];
-  let out = '.nyx-cache';
+  let out = '.operon-cache';
   let minChars = MIN_CHARS;
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
@@ -39,7 +39,7 @@ async function renderFile(text) {
 async function main() {
   const { files, out, minChars } = parseArgs(process.argv.slice(2));
   if (files.length === 0) {
-    console.error('nyx: no files given. Usage: node render.mjs [--out DIR] <files...>');
+    console.error('operon: no files given. Usage: node render.mjs [--out DIR] <files...>');
     process.exit(2);
   }
   if (!existsSync(out)) mkdirSync(out, { recursive: true });
@@ -63,7 +63,7 @@ async function main() {
     const { sparse, imgs } = await renderFile(text);
     const pages = [];
     for (const im of imgs) {
-      const name = `nyx_p${String(++pageIdx).padStart(3, '0')}.png`;
+      const name = `operon_p${String(++pageIdx).padStart(3, '0')}.png`;
       writeFileSync(resolve(out, name), im.png);
       pages.push({ page: name, width: im.width, height: im.height, droppedChars: im.droppedChars });
     }
@@ -78,7 +78,7 @@ async function main() {
     });
   }
 
-  console.log('=== NYX MANIFEST ===');
+  console.log('=== OPERON MANIFEST ===');
   console.log(`output dir: ${resolve(out)}`);
   for (const m of manifest) {
     if (m.status === 'imaged') {
@@ -97,6 +97,6 @@ async function main() {
 }
 
 main().catch((e) => {
-  console.error('nyx: fatal', e);
+  console.error('operon: fatal', e);
   process.exit(1);
 });
